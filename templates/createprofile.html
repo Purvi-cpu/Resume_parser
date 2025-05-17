@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Profile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex justify-center items-center min-h-screen">
+
+    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-lg">
+        <h1 class="text-3xl font-semibold text-center text-green-500 mb-6">Create Your Profile</h1>
+
+        <form id="createProfileForm" class="space-y-6">
+            <div>
+                <label for="user_id" class="block text-sm font-medium text-gray-700">User ID</label>
+                <input type="text" id="user_id" name="user_id" required
+                    class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500">
+            </div>
+
+            <div>
+                <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
+                <input type="text" id="name" name="name" required
+                    class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500">
+            </div>
+
+            <div>
+                <label for="bio" class="block text-sm font-medium text-gray-700">Bio</label>
+                <textarea id="bio" name="bio" required
+                    class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 resize-none h-32"></textarea>
+            </div>
+
+            <div>
+                <label for="image" class="block text-sm font-medium text-gray-700">Profile Image</label>
+                <input type="file" id="image" name="image"
+                    class="mt-1 block w-full text-sm text-gray-700 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500">
+            </div>
+
+            <button type="submit"
+                class="w-full bg-green-500 text-white py-3 rounded-md text-lg font-semibold hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500">
+                Create Profile
+            </button>
+        </form>
+    </div>
+
+   <script>
+document.getElementById('createProfileForm').addEventListener('submit', async (e) => {
+    e.preventDefault();  // Correct usage of preventDefault
+
+    const user_id = document.getElementById('user_id').value;
+    const name = document.getElementById('name').value;
+    const bio = document.getElementById('bio').value;
+    const image = document.getElementById('image').files[0];
+
+    const oldMessage = document.getElementById('dynamic-message');
+    if (oldMessage) oldMessage.remove();
+
+    const formData = new FormData();
+    formData.append('user_id', user_id);
+    formData.append('name', name);
+    formData.append('bio', bio);
+    formData.append('image', image);
+
+    try {
+        const response = await fetch('http://127.0.0.1:8000/create/', {
+            method: 'POST',
+            body: formData, // FormData includes image
+        });
+
+        const result = await response.json();
+
+        const messageContainer = document.createElement('div');
+        messageContainer.id = 'dynamic-message';
+        messageContainer.classList.add('text-sm', 'mt-4', 'text-center');
+
+        if (result.status) {
+            messageContainer.textContent = result.message || "Profile created successfully.";
+            messageContainer.classList.add('text-green-500');
+        } else {
+            messageContainer.textContent = result.message || "Error creating profile.";
+            messageContainer.classList.add('text-red-500');
+        }
+
+        document.getElementById('createProfileForm').appendChild(messageContainer);
+
+    } catch (error) {
+        const messageContainer = document.createElement('div');
+        messageContainer.id = 'dynamic-message';
+        messageContainer.textContent = "Something went wrong. Please try again.";
+        messageContainer.classList.add('text-red-500', 'text-sm', 'mt-4', 'text-center');
+        document.getElementById('createProfileForm').appendChild(messageContainer);
+    }
+});
+</script>
+
+
+</body>
+</html>

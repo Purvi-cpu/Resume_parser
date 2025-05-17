@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-cover bg-center h-screen" style="background-image: url('https://t4.ftcdn.net/jpg/09/91/71/77/240_F_991717723_SuqXSaqvVYvIWY8168vU2Z5ETU7BA2Wb.jpg');">
+    <div class="flex justify-center items-center h-full">
+        <div class="bg-black bg-opacity-40 backdrop-blur-lg p-10 rounded-lg w-1/3">
+            <h2 class="text-2xl font-semibold text-white text-center mb-8">Sign Up</h2>
+            
+            <form id="registerForm" action="javascript:void(0);">
+
+                <div class="mb-6">
+                    <label for="username" class="text-white block text-sm">Full Name</label>
+                    <input type="text" id="username" name="username" required
+                        class="w-full p-3 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div class="mb-6">
+                    <label for="email" class="text-white block text-sm">Email Address</label>
+                    <input type="email" id="email" name="email" required
+                        class="w-full p-3 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div class="mb-6">
+                    <label for="password" class="text-white block text-sm">Password</label>
+                    <input type="password" id="password" name="password" required
+                        class="w-full p-3 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div class="mb-6">
+                    <label for="mobile" class="text-white block text-sm">Mobile Number</label>
+                    <input type="tel" id="mobile" name="mobile" required pattern="[0-9]{10}"
+                        class="w-full p-3 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div class="mb-6">
+                    <label for="role" class="text-white block text-sm">Select Role</label>
+                    <select id="role" name="role" required
+                        class="w-full p-3 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                        <option value="">-- Select Role --</option>
+                        <option value="user">User</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+                <div class="flex items-center mb-6">
+                    <input type="checkbox" id="terms" name="terms" required class="h-4 w-4 text-blue-600 focus:ring-0">
+                    <label for="terms" class="text-sm text-white ml-2">I agree to the <a href="#termsModal" class="text-blue-600 hover:text-blue-700">Terms and Conditions</a></label>
+                </div>
+                <button type="submit" class="w-full bg-blue-600 text-white p-3 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">Sign Up</button>
+            </form>
+            <div class="text-center mt-4">
+                <p class="text-sm text-gray-300">Already have an account? <a href="/login/" class="text-blue-600 hover:text-blue-700">Login</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Terms and Conditions Modal -->
+    <div id="termsModal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center hidden">
+        <div class="bg-white p-6 rounded-lg w-96">
+            <h3 class="text-2xl font-semibold mb-4">Terms and Conditions</h3>
+            <p class="text-sm mb-4">By signing up, you agree to the following terms and conditions:</p>
+            <ul class="list-disc list-inside text-sm text-gray-700">
+                <li>You must provide accurate and up-to-date information.</li>
+                <li>You are responsible for maintaining the confidentiality of your account credentials.</li>
+                <li>You agree to use the platform in a lawful manner, adhering to the platform's guidelines.</li>
+                <li>We reserve the right to terminate accounts that violate our terms.</li>
+                <li>For further details, refer to our <a href="#" class="text-blue-600">Privacy Policy</a>.</li>
+            </ul>
+            <div class="flex justify-end mt-4">
+                <button class="text-blue-600 hover:text-blue-700" onclick="closeModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Show terms modal when clicked
+        const termsLink = document.querySelector("a[href='#termsModal']");
+        const termsModal = document.getElementById("termsModal");
+
+        termsLink.addEventListener("click", function(e) {
+            e.preventDefault();
+            termsModal.classList.remove("hidden");
+        });
+
+        // Close the modal
+        function closeModal() {
+            termsModal.classList.add("hidden");
+        }
+
+        // Form submission
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Validate form
+            const username = document.getElementById('username').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const mobile = document.getElementById('mobile').value.trim();
+            const role = document.getElementById('role').value;
+            const terms = document.getElementById('terms').checked;
+
+            // Basic validation
+            if (!username || !email || !password || !mobile || !role || !terms) {
+                alert('Please fill in all required fields and accept the terms and conditions.');
+                return;
+            }
+
+            // Email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert('Please enter a valid email address.');
+                return;
+            }
+
+            // Mobile validation
+            const mobileRegex = /^[0-9]{10}$/;
+            if (!mobileRegex.test(mobile)) {
+                alert('Please enter a valid 10-digit mobile number.');
+                return;
+            }
+
+            const formData = {
+                username: username,
+                email: email,
+                password: password,
+                mobile: mobile,
+                role: role
+            };
+
+            fetch('/register_user/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status) {
+                    alert('Registration successful! Please login.');
+                    window.location.href = '/login/';
+                } else {
+                    if (data.errors) {
+                        // Display field-specific errors
+                        Object.keys(data.errors).forEach(field => {
+                            const errorMessage = data.errors[field];
+                            alert(`${field}: ${errorMessage}`);
+                        });
+                    } else {
+                        alert(data.message || 'Registration failed');
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred during registration');
+            });
+        });
+    </script>
+</body>
+</html>
+                                          

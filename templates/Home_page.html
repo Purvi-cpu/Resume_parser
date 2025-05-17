@@ -1,0 +1,403 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .img-bg{
+            background-image: url('https://t4.ftcdn.net/jpg/02/99/26/33/240_F_299263325_q6TlLHif6pvBK3Td1mUacNtjZlT9q9uW.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+        @media screen and(max-width:500px ) {
+            container-text{
+                width: 150px;
+                height: 200px;
+            }
+        }
+        .ask-us{
+            background-image: url('https://www.textkernel.com/wp-content/uploads/2024/05/subscribe_image-scaled.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="h-20 w-full bg-slate-300 flex justify-between items-center font-semibold text-2xl text-blue-950 fixed">
+        <img class="h-[70] rounded-md ml-0 " src="data:image/jpeg;base64,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" alt="Parser">
+       <ul class="flex justify-between gap-10">
+          <a href="{% url 'home' %}">Home</a>
+          <a href="{% url 'about' %}">About Us</a>
+          <a href="#pricing-section">Pricing</a>
+          <a href="{% url 'contact' %}">Contact</a>
+          <a href="{% url 'fill_form' %}">Fill Form</a>
+       </ul>
+       <a href="{% url 'login' %}" class="flex justify-center items-center ml-18 gap-1">Login<i class="fa fa-user-circle-o" style="font-size:36px; color:rgb(3, 3, 68)"></i></a>
+    </div>
+    <div class="h-[650] w-full pl-8 img-bg transition-all duration-300 group-hover:scale-110 group-hover:rotate-6 ">
+        <div class="h-[250] w-[700] pt-[280] text-white text-justify">
+            <h3 class="font-bold text-2xl">Resume parsing software</h3>
+            <h1 class="font-bold text-4xl ">Undisputedly, the industry's most used resume parsing software for accuracy and speed</h1>
+            <h5 class="font-semibold text-xl">A resume parser extracts analyzes and organizes data from resumes to identify suitable candidates. This tool streamlines the recruitment process, minimizes errors, and saves time, thus enhancing recruiters' efficiency.</h5>
+        </div>
+        <div class="pt-[270] pl-10 text-lg flex gap-10 ">
+                 <!-- Button & Modal Container -->
+<div x-data="{ open: false }">
+
+    <!-- Book a Demo Button -->
+    <a href="javascript:void(0);" 
+       @click="open = true" 
+       class="inline-flex items-center border px-6 py-3 bg-orange-500 text-white rounded-md hover:bg-orange-600 transition"
+    >
+      Book a Demo
+    </a>
+  
+    <!-- Modal Background -->
+    <div 
+      x-show="open" 
+      x-transition 
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+    >
+      <!-- Modal Box -->
+      <div 
+        @click.away="open = false"
+        class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md"
+      >
+        <h2 class="text-2xl font-semibold mb-4">Book a Demo</h2>
+        <form class="space-y-4">
+          <!-- Work Email -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Work Email *</label>
+            <input type="email" placeholder="Enter your work email" class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500" required />
+          </div>
+  
+          <!-- First Name -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700">First Name *</label>
+            <input type="text" placeholder="Enter your first name" class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500" required />
+          </div>
+  
+          <!-- Last Name -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Last Name *</label>
+            <input type="text" placeholder="Enter your last name" class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500" required />
+          </div>
+  
+          <!-- Company Name -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Company Name *</label>
+            <input type="text" placeholder="Enter your company name" class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500" required />
+          </div>
+  
+          <!-- Job Title -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Job Title *</label>
+            <input type="text" placeholder="Enter your job title" class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500" required />
+          </div>
+  
+          <!-- Country Dropdown -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Country *</label>
+            <select class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+              <option value="" disabled selected>Select one</option>
+              <option>United States</option>
+              <option>Canada</option>
+              <option>India</option>
+              <option>United Kingdom</option>
+              <option>Germany</option>
+              <option>Australia</option>
+              <!-- Add more countries as needed -->
+            </select>
+          </div>
+  
+          <!-- Phone Number -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Phone Number (with country code) *</label>
+            <input type="tel" placeholder="+1 123 456 7890" class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500" required />
+          </div>
+  
+          <!-- Action Buttons -->
+          <div class="flex justify-end pt-2">
+            <button 
+              type="button" 
+              @click="open = false" 
+              class="mr-2 text-gray-600 hover:text-gray-800"
+            >
+              Cancel
+            </button>
+            <button 
+              type="submit" 
+              class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+            >
+              Submit
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+            <a href="#pricing-section" class=" border border-orange-500 px-10 py-3 rounded-md text-white hover:text-blue-500">Pricing</a>
+        </div>
+    </div>
+    <div class="bg-gray-200 h-[1220] w-full flex container-text">
+        <div class="pt-[250] pl-8 text-justify w-1/2 ">
+            <h1 class="font-bold text-5xl pt-1">Embrace a new era of recruitment accuracy and efficiency with the world's top resume parsing software</h1>
+            <p class="pt-10 text-lg">
+                 A resume parser extracts resume data and converts it into unstructured data into a structured form.<br>
+ It automatically segregates extracted information into various fields and parameters like contact information, educational qualification, work experience, skills, achievements, and professional certifications to quickly help you identify the most relevant resumes based on your criteria.
+
+            </p>
+        </div>
+        <div>
+            <figure class="wp-block-video alignfull"><video autoplay="" loop="" muted="" src="https://www.textkernel.com/wp-content/uploads/2024/06/Parser_flexrequests_Textkernel.mp4"></video></figure>
+        </div>
+    </div>
+    <div class="h-[400] w-full px-20 py-15 ">
+        <h1 class="font-bold text-4xl pt-10 ">Explore our <span class="text-orange-500">product options</span></h1>
+        <p class="pt-10 text-xl text-justify pr-20 pb-8">Textkernel's Parsers are a game changer. As a seamless part of your ATS, CRM, or career portal, the Parser extracts data from resumes and job postings much faster than a seasoned recruiter and transfers the standardized and structured data to your system at a fraction of the cost.</p>
+        <div x-data="{ open: false }">
+
+            <!-- Book a Demo Button -->
+            <a href="javascript:void(0);" 
+               @click="open = true" 
+               class="inline-flex items-center text-xl border px-6 py-3 bg-orange-500 text-white rounded-md hover:bg-orange-600 transition"
+            >
+              Get a free demo
+            </a>
+          
+            <!-- Modal Background -->
+            <div 
+              x-show="open" 
+              x-transition 
+              class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+            >
+              <!-- Modal Box -->
+              <div 
+                @click.away="open = false"
+                class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md"
+              >
+                <h2 class="text-2xl font-semibold mb-4">Book a Demo</h2>
+                <form class="space-y-4">
+                  <!-- Work Email -->
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700">Work Email *</label>
+                    <input type="email" placeholder="Enter your work email" class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500" required />
+                  </div>
+          
+                  <!-- First Name -->
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700">First Name *</label>
+                    <input type="text" placeholder="Enter your first name" class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500" required />
+                  </div>
+          
+                  <!-- Last Name -->
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700">Last Name *</label>
+                    <input type="text" placeholder="Enter your last name" class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500" required />
+                  </div>
+          
+                  <!-- Company Name -->
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700">Company Name *</label>
+                    <input type="text" placeholder="Enter your company name" class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500" required />
+                  </div>
+          
+                  <!-- Job Title -->
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700">Job Title *</label>
+                    <input type="text" placeholder="Enter your job title" class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500" required />
+                  </div>
+          
+                  <!-- Country Dropdown -->
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700">Country *</label>
+                    <select class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                      <option value="" disabled selected>Select one</option>
+                      <option>United States</option>
+                      <option>Canada</option>
+                      <option>India</option>
+                      <option>United Kingdom</option>
+                      <option>Germany</option>
+                      <option>Australia</option>
+                      <!-- Add more countries as needed -->
+                    </select>
+                  </div>
+          
+                  <!-- Phone Number -->
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700">Phone Number (with country code) *</label>
+                    <input type="tel" placeholder="+1 123 456 7890" class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500" required />
+                  </div>
+          
+                  <!-- Action Buttons -->
+                  <div class="flex justify-end pt-2">
+                    <button 
+                      type="button" 
+                      @click="open = false" 
+                      class="mr-2 text-gray-600 hover:text-gray-800"
+                    >
+                      Cancel
+                    </button>
+                    <button 
+                      type="submit" 
+                      class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                    >
+                      Submit
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        <a href="#pricing-section" class="pl-6 font-semibold text-xl ">View pricing ></a>
+    </div>
+    <div class="h-[1100] bg-cyan-800 w-full" id="pricing-section">
+        <div class=" pl-20 text-white w-[1000]">
+            <h1 class="font-bold text-4xl pt-10">Choose your <span class="text-orange-500">Plan</span></h1>
+            <p class="text-xl">Whether you're eager to try it out, prefer to explore and adopt our APIs independently, or want to customize every detail to fit your specific needs, we've got you covered.</p>
+        </div>
+        <div class="flex mt-[200] ml-20 gap-10 ">
+            <div class="w-[500] h-[700] bg-white p-6 rounded-md">
+                <h1 class="font-bold text-3xl pt-10 text-cyan-800">FREE TRIAL<br> <span class="text-orange-500">TRY IT <br> FOR FREE</span></h1>
+                <p class="text-xl">Try and test our Parser through our demo UI and/or through our API</p>
+                <hr class="flex-grow border-t border-yellow-500 mt-20"> 
+                <ul class="list-image-[url(data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPScxOScgaGVpZ2h0PScxOCcgZmlsbD0nbm9uZSc+PHBhdGggZD0nbTYuMzMzIDkgMi41IDIuNSA1LjUtNC41JyBzdHJva2U9JyMyMDI5NDUnIHN0cm9rZS13aWR0aD0nMicgc3Ryb2tlLWxpbmVjYXA9J3JvdW5kJyBzdHJva2UtbGluZWpvaW49J3JvdW5kJy8+PC9zdmc+)] ml-10 mt-5 text-xl">
+                    <li class="mb-8">500 free credits</li>
+                    <li class="mb-44">Instant access</li>
+                  </ul>
+                  <a href="{% url 'upload_resume' %}" class=" border px-3 py-3 items-center bg-orange-500 rounded-md " onclick="handleFreeTrial(event)">Start your free trial</a>
+            </div>
+            <div class="w-[500] h-[700] bg-white p-6 rounded-md">
+                <h1 class="font-bold text-3xl pt-10 text-cyan-800">PROFESSIONAL<br><span class="text-orange-500">STARTING AT <br> $99/MONTH</span></h1>
+                <p class="text-xl">Purchase credits to independently integrate our APIs</p>
+                <hr class="flex-grow border-t border-yellow-500 mt-20"> 
+                <ul class="list-image-[url(data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPScxOScgaGVpZ2h0PScxOCcgZmlsbD0nbm9uZSc+PHBhdGggZD0nbTYuMzMzIDkgMi41IDIuNSA1LjUtNC41JyBzdHJva2U9JyMyMDI5NDUnIHN0cm9rZS13aWR0aD0nMicgc3Ryb2tlLWxpbmVjYXA9J3JvdW5kJyBzdHJva2UtbGluZWpvaW49J3JvdW5kJy8+PC9zdmc+)] ml-10 mt-5 text-xl">
+                    <li class="mb-8">Monthly plans from 500-25,000 credits</li>
+                    <li class="mb-8">Annual plans up to 100,000 credits</li>
+                    <li class="mb-28">Instant access</li>
+                  </ul>
+                  <a href="#" class=" border px-6 py-3 items-center bg-orange-500 rounded-md ">Start now</a>
+            </div>
+            <div class="w-[500] h-[700] bg-white p-6 rounded-md">
+                <h1 class="font-bold text-3xl pt-10 text-cyan-800">ENTERPRISE<br><span class="text-orange-500">CUSTOMIZE YOUR <br> PLAN</span></h1>
+                <p class="text-xl">Contact us to customize every aspect to fit your needs</p>
+                <hr class="flex-grow border-t  border-yellow-500 mt-20"> 
+                <ul class="list-image-[url(data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPScxOScgaGVpZ2h0PScxOCcgZmlsbD0nbm9uZSc+PHBhdGggZD0nbTYuMzMzIDkgMi41IDIuNSA1LjUtNC41JyBzdHJva2U9JyMyMDI5NDUnIHN0cm9rZS13aWR0aD0nMicgc3Ryb2tlLWxpbmVjYXA9J3JvdW5kJyBzdHJva2UtbGluZWpvaW49J3JvdW5kJy8+PC9zdmc+)] ml-10 mt-5 text-xl">
+                    <li class="mb-8">Parse higher volumes</li>
+                    <li class="mb-44">Expert advice and consultation</li>
+                  </ul>
+                  <a href="#" class=" border px-6 py-3 items-center bg-orange-500 rounded-md ">Contact us</a>
+            </div>
+        </div>
+    </div>
+    <div class="h-[750] w-full bg-white flex justify-center">
+        <div class="h-[800] w-[1200]  pt-14 ">
+        <img src="https://www.textkernel.com/wp-content/uploads/2024/05/textkernel-wizard-image-2.jpg" alt="" class="scale-100 transition-all duration-300 hover:scale-90">
+    </div>
+    <div class="bg-green-300 h-[573] w-[400] mt-14 font-semibold justify p-8 items-center text-blue-950">
+       <p class="text-xl"> The best results come from using <span class="text-white"> THE RIGHT TOOLS</span></p><br>
+<h1 class="text-2xl">ARE PARES-IT PARSERS THE RIGHT TOOLS FOR YOU?</h1><br>
+
+<p class="text-xl pt-10 mb-32">Parse-it is here to help you get the most out of your recruitment process. Take our 1-minute quiz for personalized product recommendations.</p>
+<a href="#" class="mt-28 ml-40 border px-6 py-4 text-white font-semibold text-xl bg-blue-950 rounded-md">Know More</a>
+    </div>
+      </div>
+      <hr class="flex-grow border-t-[3px]  border-blue-950 ml-14 mr-14  ">
+      <div class="flex justify-center h-[950] w-full p-24 gap-20">
+        <div class="text-slate-600">
+            <h1 class="font-bold text-2xl ">FAQ</h1>
+            <p class="font-semibold text-xl pt-6">Got questions about our Parser? Check out our FAQ for basics or dive into our developer portal for more in-depth technical info. We're here to help if you need more answers.</p>
+        </div>
+        <div class="w-[1000] font-medium text-2xl">
+            <div>
+                <a href="#" class="mt-4">What is a resume parser?</span></button>
+                <hr class="flex-grow border-t border-blue-900 mr-0 mt-16 mb-4"> 
+            </div>
+            <div>
+                <a href="#" class="">How do I use the resume parser?</span></button>
+                <hr class="flex-grow border-t border-blue-900 mr-0 mt-16 mb-4"> 
+            </div>
+            <div>
+                <a href="#" class="">How are the results structured?</span></button>
+                <hr class="flex-grow border-t border-blue-900 mr-0 mt-16 mb-4">
+            </div>
+            <div>
+                <a href="#" class="">Can I try the resume parser for free?</span></button>
+                <hr class="flex-grow border-t border-blue-900 mr-0 mt-16 mb-4">
+            </div>
+            <div>
+                <a href="#" class=" text-justify">What capabilities does Parse-it's Parser offer in terms of data extraction and file formats?</span></button>
+                <hr class="flex-grow border-t border-blue-900 mr-0 mt-16">
+            </div>
+      </div>
+    </div>
+    <div class=" h-[550] w-full flex pt-14 justify-center text-center ask-us">
+        <div class="text-white w-[800px]">
+            <h1 class="font-bold text-5xl mt-4 text-center">Subscribe to <span class="text-orange-500"> our <br> newsletter</span> and don't <br>miss a thing!</h1>
+            <p class="font-semibold text-2xl pt-8 pb-16">Want to keep up to date with the latest news about recruitment technology solutions? Click the button below and never miss an update.</p>
+            <a href="#" class=" border px-6 py-3 items-center bg-orange-500 rounded-md ">Yes,I want Updates!</a>
+        </div>
+    </div>
+    <footer class="h-[700] w-full bg-slate-200">
+        <div class="flex gap-20 pt-28 pl-24 text-center">
+            <a href="#" class="border-b-2 border-orange-500 pl-2 pr-36 py-3 items-center bg-white text-2xl">Request a demo</a>
+            <a href="#" class="border-b-2 border-orange-500 pl-2 pr-36 py-3 items-center bg-white text-2xl">Contact with us</a>
+            <a href="#" class="border-b-2 border-orange-500 pl-2 pr-48 py-3 items-center bg-white text-2xl">Careers</a>
+            <a href="#" class="border-b-2 border-orange-500 pl-2 pr-36 py-3 items-center bg-white text-2xl">Read our blogs</a>
+        </div>
+        <div class="flex p-20 gap-20">
+            <div class="grid-flow-row text-xl font-medium ">
+                <h1 class="text-3xl">Products</h1>
+                <h3>Parser</h3>
+                <h3>Skills Intelligence</h3>
+            </div>
+            <div class="grid-flow-row text-xl font-medium">
+                <h1 class="text-3xl">About</h1>
+                <h3>Help Center</h3>
+                <h3>FAQ</h3>
+                <h3>Terms and Agreements</h3>
+            </div>
+            <div class="flex">
+                <a href="https://www.instagram.com/" target="_blank"><i class="fab fa-instagram fa-2x" style="color: #ac2bac;"></i></a>
+                <a href="https://www.linkedin.com/company/" target="_blank"><i class="fab fa-instagram fa-2x" style="color: #ac2bac;"></i></a>
+                <a href="https://www.youtube.com/" target="_blank"><i class="fab fa-youtube fa-2x" style="color: #ed302f;"></i></a>
+            </div>
+        </div>
+
+    </footer>
+
+<script>
+function handleFreeTrial(event) {
+    event.preventDefault();
+    
+    // Check if user is authenticated by making a request to the server
+    fetch('/check-auth/', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.is_authenticated) {
+            // User is logged in, redirect to userdashboard
+            window.location.href = '/userdashboard/';
+        } else {
+            // User is not logged in, redirect to login page
+            window.location.href = '/login/';
+        }
+    })
+    .catch(error => {
+        console.error('Error checking authentication:', error);
+        // On error, redirect to login page as a fallback
+        window.location.href = '/login/';
+    });
+}
+</script>
+</body>
+</html>

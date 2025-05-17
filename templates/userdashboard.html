@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4e73df;
+            --secondary-color: #858796;
+            --success-color: #1cc88a;
+            --info-color: #36b9cc;
+            --warning-color: #f6c23e;
+            --danger-color: #e74a3b;
+            --light-color: #f8f9fc;
+            --dark-color: #5a5c69;
+        }
+
+        body {
+            background-color: var(--light-color);
+            font-family: 'Nunito', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        .sidebar {
+            width: 250px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            background: linear-gradient(180deg, var(--primary-color) 10%, #224abe 100%);
+            padding-top: 1rem;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .sidebar-brand {
+            padding: 1.5rem 1rem;
+            text-align: center;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 1rem;
+        }
+
+        .sidebar-item {
+            padding: 0.75rem 1rem;
+            color: rgba(255,255,255,0.8);
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .sidebar-item:hover {
+            color: white;
+            background: rgba(255,255,255,0.1);
+        }
+
+        .sidebar-item.active {
+            color: white;
+            background: rgba(255,255,255,0.2);
+        }
+
+        .sidebar-item i {
+            margin-right: 0.75rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            padding: 1.5rem;
+        }
+
+        .topbar {
+            background: white;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+            padding: 1rem 1.5rem;
+            margin-bottom: 1.5rem;
+            border-radius: 0.35rem;
+        }
+
+        .card {
+            border: none;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+            margin-bottom: 1.5rem;
+        }
+
+        .card-header {
+            background: white;
+            border-bottom: 1px solid #e3e6f0;
+            padding: 1rem 1.25rem;
+        }
+
+        .card-body {
+            padding: 1.25rem;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .btn-primary:hover {
+            background: #2e59d9;
+            border-color: #2e59d9;
+        }
+
+        .btn-danger {
+            background: var(--danger-color);
+            border-color: var(--danger-color);
+        }
+
+        .btn-danger:hover {
+            background: #be2617;
+            border-color: #be2617;
+        }
+
+        .profile-image-container {
+            width: 150px;
+            height: 150px;
+            margin: 0 auto;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 5px solid white;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+        }
+
+        .profile-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #e9ecef;
+            color: var(--secondary-color);
+        }
+
+        .info-item {
+            padding: 1rem;
+            border-bottom: 1px solid #e3e6f0;
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            color: var(--secondary-color);
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .info-value {
+            color: var(--dark-color);
+            font-weight: 500;
+        }
+
+        .table {
+            margin-bottom: 0;
+        }
+
+        .table th {
+            border-top: none;
+            background: #f8f9fc;
+            color: var(--dark-color);
+            font-weight: 600;
+        }
+
+        .badge {
+            padding: 0.5em 0.75em;
+            font-weight: 500;
+        }
+
+        .badge-success {
+            background: var(--success-color);
+        }
+
+        .badge-warning {
+            background: var(--warning-color);
+        }
+
+        .badge-danger {
+            background: var(--danger-color);
+        }
+
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            transition: transform 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            background: #f0f7ff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+        }
+
+        .stat-icon i {
+            font-size: 1.5rem;
+            color: #007bff;
+        }
+
+        .stat-info h3 {
+            margin: 0;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .stat-info p {
+            margin: 0.5rem 0 0;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .dashboard-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .action-button {
+            background: #007bff;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 5px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: background 0.2s;
+        }
+
+        .action-button:hover {
+            background: #0056b3;
+        }
+
+        .action-button i {
+            font-size: 1.1rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-brand">
+            <i class="fas fa-file-alt me-2"></i>
+            Resume Parser
+        </div>
+        <a href="#" class="sidebar-item active" onclick="showSection('dashboard')">
+            <i class="fas fa-tachometer-alt"></i>
+            Dashboard
+        </a>
+        <a href="#" class="sidebar-item" onclick="showSection('upload')">
+            <i class="fas fa-upload"></i>
+            Upload Resume
+        </a>
+        <a href="#" class="sidebar-item" onclick="showSection('profile')">
+            <i class="fas fa-user"></i>
+            Profile Settings
+        </a>
+        <a href="#" class="sidebar-item" onclick="showSection('parsed')">
+            <i class="fas fa-file-alt"></i>
+            Parsed Resumes
+        </a>
+        <a href="#" class="sidebar-item" onclick="showSection('selectedresume')">
+            <i class="fas fa-star"></i>
+            Selected Resumes
+        </a>
+        <a href="#" class="sidebar-item" onclick="showSection('fillform')">
+            <i class="fas fa-file-signature"></i>
+            Fill Form
+        </a>
+        <a href="#" class="sidebar-item" id="logoutBtn">
+            <i class="fas fa-sign-out-alt"></i>
+            Logout
+        </a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Topbar -->
+        <div class="topbar">
+            <div class="d-flex justify-content-between align-items-center">
+                <h4 class="mb-0">Welcome, {{ user.username }}</h4>
+                <div class="d-flex align-items-center">
+                    <span class="me-3">
+                        <i class="fas fa-envelope text-primary"></i>
+                        {{ user.email }}
+                    </span>
+                    <span>
+                        <i class="fas fa-phone text-primary"></i>
+                        {{ user.mobile }}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Section -->
+        <div id="dashboard" class="dashboard-section">
+            <div class="dashboard-header">
+                <h2>Welcome, {{ user.username }}!</h2>
+                <p>Here's an overview of your account</p>
+            </div>
+            
+            <div class="dashboard-stats">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Total Resumes</h3>
+                        <p>{{ total_resumes }}</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Last Uploaded</h3>
+                        <p>{{ last_uploaded }}</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-user-check"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Profile Status</h3>
+                        <p>{% if profile %}Complete{% else %}Incomplete{% endif %}</p>
+                    </div>
+                </div>
+            </div>
+            
+           
+        </div>
+
+        <!-- Upload Section -->
+        <section id="upload" class="main-section hidden">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Upload Resume</h5>
+                </div>
+                <div class="card-body">
+                    <form id="resumeForm" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                            <p class="text-gray-600 mb-4">Drag and drop your resume here or select from device</p>
+                            <input type="file" name="resume_file" accept=".pdf,.docx" class="mb-4" required>
+                        </div>
+                        
+                        <div id="uploadStatus" class="hidden">
+                            <div class="d-flex align-items-center justify-content-center">
+                                <div class="spinner-border text-primary me-2" role="status"></div>
+                                <span>Processing your resume...</span>
+                            </div>
+                        </div>
+                        
+                        <div id="uploadResult" class="hidden"></div>
+                        
+                        <div class="text-end mt-4">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-upload me-2"></i>Upload & Parse
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- Profile Section -->
+        <section id="profile" class="main-section hidden">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <div class="profile-image-container mb-4">
+                                {% if profile and profile.image_url %}
+                                    <img src="{{ profile.image_url }}" class="profile-image" alt="Profile Image">
+                                {% else %}
+                                    <div class="profile-placeholder">
+                                        <i class="fas fa-user fa-3x"></i>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <h4 class="mb-2">{{ user.username }}</h4>
+                            <p class="text-muted mb-4">
+                                <i class="fas fa-briefcase me-2"></i>{{ user.role }}
+                            </p>
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-primary" onclick="location.href='/updateprofile/'">
+                                    <i class="fas fa-edit me-2"></i>Edit Profile
+                                </button>
+                                <button class="btn btn-danger" onclick="deleteProfile()">
+                                    <i class="fas fa-trash me-2"></i>Delete Profile
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">
+                                <i class="fas fa-user-circle me-2"></i>Profile Information
+                            </h5>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="info-item">
+                                <div class="info-label">Email</div>
+                                <div class="info-value">
+                                    <i class="fas fa-envelope me-2 text-primary"></i>{{ user.email }}
+                                </div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Mobile</div>
+                                <div class="info-value">
+                                    <i class="fas fa-phone me-2 text-primary"></i>{{ user.mobile }}
+                                </div>
+                            </div>
+                            {% if profile %}
+                                <div class="info-item">
+                                    <div class="info-label">Full Name</div>
+                                    <div class="info-value">
+                                        <i class="fas fa-user me-2 text-primary"></i>{{ profile.name }}
+                                    </div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Bio</div>
+                                    <div class="info-value">
+                                        <i class="fas fa-info-circle me-2 text-primary"></i>{{ profile.bio }}
+                                    </div>
+                                </div>
+                            {% else %}
+                                <div class="info-item">
+                                    <div class="alert alert-info m-3">
+                                        <i class="fas fa-info-circle me-2"></i>
+                                        No profile information available. 
+                                        <a href="/createprofile/" class="alert-link">Create your profile</a>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Parsed Resumes Section -->
+        <section id="parsed" class="main-section hidden">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Parsed Resumes</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Resume Name</th>
+                                    <th>Upload Date</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="resumesTableBody">
+                                <!-- Resumes will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Fill Form Section -->
+        <section id="fillform" class="main-section hidden">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-file-signature me-2"></i>
+                        Fill Resume Form
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form id="resumeFormData" class="needs-validation" novalidate>
+                        {% csrf_token %}
+                        <div class="mb-4">
+                            <label for="resumeSelector" class="form-label">Select Resume to Auto-fill</label>
+                            <select class="form-select" id="resumeSelector">
+                                <option value="">Choose a resume...</option>
+                            </select>
+                            <div class="form-text">Select a resume to auto-fill the form fields</div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="name" class="form-label">Full Name</label>
+                                <input type="text" class="form-control" id="name" name="name" required>
+                                <div class="invalid-feedback">Please enter your full name.</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}" readonly>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="phone" class="form-label">Phone Number</label>
+                                <input type="tel" class="form-control" id="phone" name="phone" value="{{ user.mobile }}" readonly>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="skills" class="form-label">Skills (comma separated)</label>
+                                <input type="text" class="form-control" id="skills" name="skills" placeholder="e.g., Python, Django, JavaScript" required>
+                                <div class="invalid-feedback">Please enter your skills.</div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="experience" class="form-label">Work Experience</label>
+                            <textarea class="form-control" id="experience" name="experience" rows="4" required></textarea>
+                            <div class="invalid-feedback">Please enter your work experience.</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="education" class="form-label">Education</label>
+                            <textarea class="form-control" id="education" name="education" rows="4" required></textarea>
+                            <div class="invalid-feedback">Please enter your education details.</div>
+                        </div>
+
+                        <div class="text-end">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i>Save Form
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- Selected Resumes Section -->
+        <section id="selectedresume" class="main-section hidden">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">My Selected Resumes</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row" id="selectedResumesGrid">
+                        <!-- Selected resumes will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Add initialization code
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Page loaded, initializing...');
+            // Hide all sections except dashboard
+            document.querySelectorAll('.main-section').forEach(section => {
+                if (section.id !== 'dashboard') {
+                    section.classList.add('hidden');
+                }
+            });
+            
+            // Set active state for dashboard in sidebar
+            document.querySelectorAll('.sidebar-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.querySelector('.sidebar-item[onclick="showSection(\'dashboard\')"]').classList.add('active');
+            
+            // Load initial data
+            loadResumes();
+            loadSelectedResumes();
+        });
+
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.main-section').forEach(section => {
+                section.classList.add('hidden');
+            });
+            
+            // Show the selected section
+            document.getElementById(sectionId).classList.remove('hidden');
+            
+            // Update active state in sidebar
+            document.querySelectorAll('.sidebar-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+            
+            if (sectionId === 'selectedresume') {
+                console.log('Selected resumes section shown, loading data...');
+                loadSelectedResumes();
+            }
+            if (sectionId === 'fillform') {
+                loadResumeSelector();
+            }
+        }
+
+        // Add this CSS class if not already present
+        const style = document.createElement('style');
+        style.textContent = `
+            .hidden {
+                display: none !important;
+            }
+        `;
+        document.head.appendChild(style);
+
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            fetch('/logout/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status) {
+                    window.location.href = '/login/';
+                }
+            });
+        });
+
+        function deleteProfile() {
+            if (confirm('Are you sure you want to delete your profile? This action cannot be undone.')) {
+                fetch('/delete_profile/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        user_id: '{{ user.id }}'
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status) {
+                        alert(data.message);
+                        window.location.href = '/login/';
+                    } else {
+                        alert(data.message || 'Failed to delete profile');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while deleting the profile');
+                });
+            }
+        }
+
+        // Helper to fetch CSRF token
+        function getCookie(name) {
+            // let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.startsWith(name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.slice(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        // Handle resume upload
+        document.getElementById('resumeForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const form = e.target;
+            const formData = new FormData(form);
+            const statusDiv = document.getElementById('uploadStatus');
+            const resultDiv = document.getElementById('uploadResult');
+            
+            // Show loading status
+            statusDiv.classList.remove('hidden');
+            resultDiv.classList.add('hidden');
+            
+            fetch('/upload-resume/', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                statusDiv.classList.add('hidden');
+                resultDiv.classList.remove('hidden');
+                
+                if (data.status) {
+                    resultDiv.innerHTML = `
+                        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
+                            <p class="font-bold">Success!</p>
+                            <p>Resume parsed successfully. Redirecting to review page...</p>
+                        </div>
+                    `;
+                    // Redirect to review page after 2 seconds
+                    setTimeout(() => {
+                        window.location.href = '/review-resume/';
+                    }, 2000);
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+                            <p class="font-bold">Error!</p>
+                            <p>${data.message}</p>
+                        </div>
+                    `;
+                }
+            })
+            .catch(error => {
+                statusDiv.classList.add('hidden');
+                resultDiv.classList.remove('hidden');
+                resultDiv.innerHTML = `
+                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+                        <p class="font-bold">Error!</p>
+                        <p>An error occurred while processing your resume. Please try again.</p>
+                    </div>
+                `;
+            });
+        });
+
+        // Load and display resumes
+        function loadResumes() {
+            console.log("Loading resumes...");
+            fetch('/get_user_resumes/', {
+                credentials: 'include'
+            })
+            .then(response => {
+                console.log("Resumes response status:", response.status);
+                return response.json();
+            })
+            .then(data => {
+                console.log("Resumes data:", data);
+                const tbody = document.getElementById('resumesTableBody');
+                tbody.innerHTML = '';
+                
+                if (data.status && data.resumes) {
+                    data.resumes.forEach(resume => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${resume.id}</td>
+                            <td>${resume.name}</td>
+                            <td>${new Date(resume.uploaded_at).toLocaleDateString()}</td>
+                            <td>
+                                <span class="badge ${resume.status === 'parsed' ? 'bg-success' : 'bg-warning'}">
+                                    ${resume.status}
+                                </span>
+                            </td>
+                            <td class="action-buttons">
+                                <button class="btn btn-info btn-sm me-2" onclick="viewResume(${resume.id})">
+                                    <i class="fas fa-eye"></i> View
+                                </button>
+                                <button class="btn btn-danger btn-sm" onclick="deleteResume(${resume.id})">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>
+                            </td>
+                        `;
+                        tbody.appendChild(row);
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error loading resumes:', error);
+            });
+        }
+
+        // Add these functions after the existing JavaScript code
+        function viewResume(resumeId) {
+            window.location.href = `/review_resume/${resumeId}/`;
+        }
+
+        function loadSelectedResumes() {
+            console.log('Loading selected resumes...');
+            fetch('/get_selected_resumes/')
+                .then(response => {
+                    console.log('Response status:', response.status);
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Received data:', data);
+                    const grid = document.getElementById('selectedResumesGrid');
+                    grid.innerHTML = '';
+                    
+                    if (!data.status) {
+                        grid.innerHTML = `
+                            <div class="col-12 text-center py-4">
+                                <p class="text-danger">Error: ${data.message || 'Failed to load selected resumes'}</p>
+                            </div>
+                        `;
+                        return;
+                    }
+                    
+                    if (!data.resumes || data.resumes.length === 0) {
+                        grid.innerHTML = `
+                            <div class="col-12 text-center py-4">
+                                <p class="text-muted">No selected resumes yet.</p>
+                            </div>
+                        `;
+                        return;
+                    }
+                    
+                    data.resumes.forEach(resume => {
+                        const card = document.createElement('div');
+                        card.className = 'col-md-4 mb-4';
+                        card.innerHTML = `
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title">${resume.name || 'Unnamed Resume'}</h5>
+                                    <p class="card-text text-muted">
+                                        <small>Created: ${new Date(resume.created_at).toLocaleDateString()}</small>
+                                    </p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <button onclick="viewSelectedResume(${resume.id})" class="btn btn-primary btn-sm">
+                                            <i class="fas fa-eye me-1"></i> View
+                                        </button>
+                                        <button onclick="deleteSelectedResume(${resume.id})" class="btn btn-danger btn-sm">
+                                            <i class="fas fa-trash me-1"></i> Delete
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        grid.appendChild(card);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error loading selected resumes:', error);
+                    const grid = document.getElementById('selectedResumesGrid');
+                    grid.innerHTML = `
+                        <div class="col-12 text-center py-4">
+                            <p class="text-danger">Error loading selected resumes. Please try again later.</p>
+                        </div>
+                    `;
+                });
+        }
+
+        function viewSelectedResume(resumeId) {
+            window.location.href = `/view_selected_resume/${resumeId}/`;
+        }
+
+        function deleteSelectedResume(resumeId) {
+            if (confirm('Are you sure you want to delete this selected resume?')) {
+                fetch(`/delete_selected_resume/${resumeId}/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status) {
+                        loadSelectedResumes(); // Reload the list
+                    } else {
+                        alert(data.message || 'Failed to delete resume');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while deleting the resume');
+                });
+            }
+        }
+
+        // Add this to your existing JavaScript code
+        document.getElementById('resumeFormData').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (!this.checkValidity()) {
+                e.stopPropagation();
+                this.classList.add('was-validated');
+                return;
+            }
+
+            const formData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                skills: document.getElementById('skills').value.split(',').map(skill => skill.trim()),
+                experience: document.getElementById('experience').value,
+                education: document.getElementById('education').value
+            };
+
+            fetch('/save-form-data/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status) {
+                    alert('Form data saved successfully!');
+                    // Optionally redirect to selected resumes section
+                    showSection('selectedresume');
+                } else {
+                    alert(data.message || 'Failed to save form data');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while saving the form data');
+            });
+        });
+
+        // Add this to your existing JavaScript code
+        function loadResumeSelector() {
+            fetch('/get_selected_resumes/')
+                .then(response => response.json())
+                .then(data => {
+                    const selector = document.getElementById('resumeSelector');
+                    selector.innerHTML = '<option value="">Choose a resume...</option>';
+                    
+                    if (data.status && data.resumes) {
+                        data.resumes.forEach(resume => {
+                            const option = document.createElement('option');
+                            option.value = resume.id;
+                            option.textContent = resume.name;
+                            option.dataset.parsedData = JSON.stringify(resume.resume__parsed_data || {});
+                            selector.appendChild(option);
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading resumes:', error);
+                });
+        }
+
+        // Add event listener for resume selection
+        document.getElementById('resumeSelector').addEventListener('change', function(e) {
+            const selectedOption = e.target.options[e.target.selectedIndex];
+            if (!selectedOption.value) return;
+
+            try {
+                const parsedData = JSON.parse(selectedOption.dataset.parsedData);
+                
+                // Auto-fill form fields
+                document.getElementById('name').value = parsedData.name || '';
+                document.getElementById('skills').value = Array.isArray(parsedData.skills) 
+                    ? parsedData.skills.join(', ') 
+                    : parsedData.skills || '';
+                document.getElementById('experience').value = parsedData.experience || '';
+                document.getElementById('education').value = parsedData.education || '';
+                
+                // Trigger validation
+                document.getElementById('resumeFormData').classList.remove('was-validated');
+            } catch (error) {
+                console.error('Error parsing resume data:', error);
+            }
+        });
+    </script>
+</body>
+</html>

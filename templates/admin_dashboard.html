@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #4e73df;
+      --secondary-color: #858796;
+      --success-color: #1cc88a;
+      --info-color: #36b9cc;
+      --warning-color: #f6c23e;
+      --danger-color: #e74a3b;
+      --light-color: #f8f9fc;
+      --dark-color: #5a5c69;
+    }
+
+    body {
+      background-color: var(--light-color);
+      font-family: 'Nunito', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .sidebar {
+      width: 250px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      background: linear-gradient(180deg, var(--primary-color) 10%, #224abe 100%);
+      padding-top: 1rem;
+      transition: all 0.3s;
+      z-index: 1000;
+    }
+
+    .sidebar-brand {
+      padding: 1.5rem 1rem;
+      text-align: center;
+      color: white;
+      font-size: 1.2rem;
+      font-weight: 600;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      margin-bottom: 1rem;
+    }
+
+    .sidebar-item {
+      padding: 0.75rem 1rem;
+      color: rgba(255,255,255,0.8);
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      transition: all 0.3s;
+    }
+
+    .sidebar-item:hover {
+      color: white;
+      background: rgba(255,255,255,0.1);
+    }
+
+    .sidebar-item.active {
+      color: white;
+      background: rgba(255,255,255,0.2);
+    }
+
+    .sidebar-item i {
+      margin-right: 0.75rem;
+      width: 20px;
+      text-align: center;
+    }
+
+    .main-content {
+      margin-left: 250px;
+      padding: 1.5rem;
+    }
+
+    .topbar {
+      background: white;
+      box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+      padding: 1rem 1.5rem;
+      margin-bottom: 1.5rem;
+      border-radius: 0.35rem;
+    }
+
+    .card {
+      border: none;
+      box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+      margin-bottom: 1.5rem;
+    }
+
+    .card-header {
+      background: white;
+      border-bottom: 1px solid #e3e6f0;
+      padding: 1rem 1.25rem;
+    }
+
+    .nav-tabs .nav-link {
+      color: var(--secondary-color);
+    }
+
+    .nav-tabs .nav-link.active {
+      color: var(--primary-color);
+      font-weight: 600;
+    }
+
+    .table th {
+      background: #f8f9fc;
+      color: var(--dark-color);
+      font-weight: 600;
+    }
+
+    .badge {
+      padding: 0.5em 0.75em;
+      font-weight: 500;
+    }
+
+    .profile-image {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .action-buttons .btn {
+      padding: 0.25rem 0.5rem;
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-brand">
+      <i class="fas fa-user-shield me-2"></i>
+      Admin Dashboard
+    </div>
+    <a href="#" class="sidebar-item active" onclick="showSection('users')">
+      <i class="fas fa-users"></i>
+      Users
+    </a>
+    <a href="#" class="sidebar-item" onclick="showSection('fill-form')">
+      <i class="fas fa-file-alt"></i>
+      Fill Form
+    </a>
+    <a href="#" class="sidebar-item" onclick="handleLogout()">
+      <i class="fas fa-sign-out-alt"></i>
+      Logout
+    </a>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <!-- Topbar -->
+    <div class="topbar">
+      <div class="d-flex justify-content-between align-items-center">
+        <h4 class="mb-0">Admin Dashboard</h4>
+        <div class="d-flex align-items-center">
+          <span class="me-3">
+            <i class="fas fa-user-shield text-primary"></i>
+            Admin
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Users Section -->
+    <section id="users" class="main-section hidden">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0">
+            <i class="fas fa-users me-2"></i>
+            User Management
+          </h5>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Username</th>
+                  <th>Email</th>
+                  <th>Mobile</th>
+                  <th>Role</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="usersTableBody">
+                <!-- Users will be loaded here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Fill Form Section -->
+    <section id="fill-form" class="main-section hidden">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0">
+            <i class="fas fa-file-alt me-2"></i>
+            Fill Form
+          </h5>
+        </div>
+        <div class="card-body">
+          <div class="row mb-4">
+            <div class="col-md-6">
+              <label class="form-label">Select User</label>
+              <select id="userSelect" class="form-select" onchange="loadUserResumes()">
+                <option value="">Select a user...</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Select Resume</label>
+              <select id="resumeSelect" class="form-select" onchange="loadResumeData()">
+                <option value="">Select a resume...</option>
+              </select>
+            </div>
+          </div>
+
+          <form id="fillFormForm" class="needs-validation" novalidate>
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label class="form-label">Name</label>
+                <input type="text" class="form-control" id="name" name="name" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" name="email" required>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label class="form-label">Phone</label>
+                <input type="tel" class="form-control" id="phone" name="phone" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Skills</label>
+                <input type="text" class="form-control" id="skills" name="skills" required>
+                <small class="text-muted">Separate skills with commas</small>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Experience</label>
+              <textarea class="form-control" id="experience" name="experience" rows="4" required></textarea>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Education</label>
+              <textarea class="form-control" id="education" name="education" rows="4" required></textarea>
+            </div>
+
+            <div class="text-end">
+              <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save me-2"></i>Save Form
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Check if user is admin on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log("Admin dashboard loaded");
+      // Hide all sections first
+      document.querySelectorAll('.main-section').forEach(section => {
+        section.classList.add('hidden');
+      });
+      // Show users section by default
+      showSection('users');
+      loadUsers();
+    });
+
+    function showSection(sectionId) {
+      console.log("Showing section:", sectionId);
+      // Hide all sections
+      document.querySelectorAll('.main-section').forEach(section => {
+        section.classList.add('hidden');
+        console.log("Hiding section:", section.id);
+      });
+      
+      // Show the selected section
+      const selectedSection = document.getElementById(sectionId);
+      if (selectedSection) {
+        selectedSection.classList.remove('hidden');
+        console.log("Showing section:", sectionId);
+      }
+      
+      // Update active state in sidebar
+      document.querySelectorAll('.sidebar-item').forEach(item => {
+        item.classList.remove('active');
+      });
+      const activeItem = document.querySelector(`.sidebar-item[onclick="showSection('${sectionId}')"]`);
+      if (activeItem) {
+        activeItem.classList.add('active');
+      }
+    }
+
+    function loadUsers() {
+      console.log("Loading users...");
+      fetch('/get_users/', {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Accept': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest'
+        }
+      })
+      .then(async response => {
+        console.log("Users response status:", response.status);
+        console.log("Response headers:", response.headers);
+        
+        // Check if response is JSON
+        const contentType = response.headers.get('content-type');
+        console.log("Content-Type:", contentType);
+        
+        if (!response.ok) {
+          if (response.status === 401) {
+            console.log("Session expired, redirecting to login");
+            window.location.href = '/login/';
+            throw new Error('Session expired');
+          } else if (response.status === 403) {
+            console.log("Not authorized, redirecting to user dashboard");
+            window.location.href = '/userdashboard/';
+            throw new Error('Not authorized');
+          }
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        // Try to parse as JSON
+        try {
+          const text = await response.text();
+          console.log("Response text:", text);
+          
+          // Check if response is HTML (login page)
+          if (text.trim().startsWith('<!DOCTYPE html>')) {
+            console.log("Received HTML instead of JSON, session may have expired");
+            window.location.href = '/login/';
+            throw new Error('Session expired');
+          }
+          
+          return JSON.parse(text);
+        } catch (e) {
+          console.error("Failed to parse response:", e);
+          if (e.message === 'Session expired') {
+            throw e;
+          }
+          throw new Error('Invalid response from server');
+        }
+      })
+      .then(data => {
+        console.log("Users data:", data);
+        const tbody = document.getElementById('usersTableBody');
+        tbody.innerHTML = '';
+        
+        if (data.status && data.users) {
+          data.users.forEach(user => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+              <td>${user.id}</td>
+              <td>${user.username}</td>
+              <td>${user.email}</td>
+              <td>${user.mobile}</td>
+              <td>${user.role}</td>
+              <td>
+                <span class="badge ${user.is_verified ? 'bg-success' : 'bg-warning'}">
+                  ${user.is_verified ? 'Verified' : 'Pending'}
+                </span>
+              </td>
+              <td class="action-buttons">
+                <button class="btn btn-sm btn-primary me-1" onclick="viewUser(${user.id})">
+                  <i class="fas fa-eye"></i>
+                </button>
+                <button class="btn btn-sm btn-danger" onclick="deleteUser(${user.id})">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </td>
+            `;
+            tbody.appendChild(row);
+          });
+        } else {
+          tbody.innerHTML = '<tr><td colspan="7" class="text-center">No users found</td></tr>';
+        }
+      })
+      .catch(error => {
+        console.error('Error loading users:', error);
+        const tbody = document.getElementById('usersTableBody');
+        if (error.message === 'Session expired') {
+          tbody.innerHTML = '<tr><td colspan="7" class="text-center text-warning">Session expired. Redirecting to login...</td></tr>';
+        } else {
+          tbody.innerHTML = `<tr><td colspan="7" class="text-center text-danger">Error loading users: ${error.message}</td></tr>`;
+        }
+      });
+    }
+
+    function viewUser(userId) {
+      console.log("Viewing user:", userId);
+      window.location.href = `/view_user_profile/${userId}/`;
+    }
+
+    function deleteUser(userId) {
+      if (confirm('Are you sure you want to delete this user?')) {
+        fetch(`/delete_user/${userId}/`, {
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.status) {
+            loadUsers(); // Reload the user list
+          } else {
+            alert(data.message || 'Error deleting user');
+          }
+        })
+        .catch(error => {
+          console.error('Error deleting user:', error);
+          alert('Error deleting user');
+        });
+      }
+    }
+
+    function handleLogout() {
+      fetch('/logout/', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest'
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.status) {
+          window.location.href = '/login/';
+        } else {
+          alert('Error logging out: ' + data.message);
+        }
+      })
+      .catch(error => {
+        console.error('Error during logout:', error);
+        alert('Error during logout');
+      });
+    }
+
+    // Load users for the fill form section
+    function loadUsersForForm() {
+      fetch('/get_users/', {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest'
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        const userSelect = document.getElementById('userSelect');
+        userSelect.innerHTML = '<option value="">Select a user...</option>';
+        
+        if (data.status && data.users) {
+          data.users.forEach(user => {
+            const option = document.createElement('option');
+            option.value = user.id;
+            option.textContent = `${user.username} (${user.email})`;
+            userSelect.appendChild(option);
+          });
+        }
+      })
+      .catch(error => {
+        console.error('Error loading users:', error);
+        alert('Error loading users');
+      });
+    }
+
+    // Load resumes for selected user
+    function loadUserResumes() {
+      const userId = document.getElementById('userSelect').value;
+      if (!userId) {
+        document.getElementById('resumeSelect').innerHTML = '<option value="">Select a resume...</option>';
+        return;
+      }
+
+      fetch(`/get_user_selected_resumes/${userId}/`, {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest'
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        const resumeSelect = document.getElementById('resumeSelect');
+        resumeSelect.innerHTML = '<option value="">Select a resume...</option>';
+        
+        if (data.status && data.resumes) {
+          data.resumes.forEach(resume => {
+            const option = document.createElement('option');
+            option.value = resume.id;
+            option.textContent = resume.name;
+            resumeSelect.appendChild(option);
+          });
+        }
+      })
+      .catch(error => {
+        console.error('Error loading resumes:', error);
+        alert('Error loading resumes');
+      });
+    }
+
+    // Load resume data into form
+    function loadResumeData() {
+      const resumeId = document.getElementById('resumeSelect').value;
+      if (!resumeId) return;
+
+      fetch(`/get_selected_resume_data/${resumeId}/`, {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest'
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.status && data.data) {
+          document.getElementById('name').value = data.data.name || '';
+          document.getElementById('email').value = data.data.email || '';
+          document.getElementById('phone').value = data.data.phone || '';
+          document.getElementById('skills').value = Array.isArray(data.data.skills) ? data.data.skills.join(', ') : '';
+          document.getElementById('experience').value = data.data.experience || '';
+          document.getElementById('education').value = data.data.education || '';
+        }
+      })
+      .catch(error => {
+        console.error('Error loading resume data:', error);
+        alert('Error loading resume data');
+      });
+    }
+
+    // Handle form submission
+    document.getElementById('fillFormForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const formData = {
+        name: document.getElementById('name').value,
+        email: document.getElementById('email').value,
+        phone: document.getElementById('phone').value,
+        skills: document.getElementById('skills').value.split(',').map(s => s.trim()),
+        experience: document.getElementById('experience').value,
+        education: document.getElementById('education').value
+      };
+
+      fetch('/save_form_data/', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: JSON.stringify(formData)
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.status) {
+          alert('Form data saved successfully');
+          // Optionally clear the form or redirect
+        } else {
+          alert('Error saving form data: ' + data.message);
+        }
+      })
+      .catch(error => {
+        console.error('Error saving form:', error);
+        alert('Error saving form data');
+      });
+    });
+
+    // Load users when fill form section is shown
+    document.querySelector('a[onclick="showSection(\'fill-form\')"]').addEventListener('click', function() {
+      loadUsersForForm();
+    });
+  </script>
+</body>
+</html>

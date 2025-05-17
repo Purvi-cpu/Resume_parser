@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fill Form</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .form-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #374151;
+        }
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+            transition: border-color 0.15s ease-in-out;
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+        .btn-primary {
+            background-color: #4f46e5;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.375rem;
+            font-weight: 600;
+            transition: background-color 0.15s ease-in-out;
+        }
+        .btn-primary:hover {
+            background-color: #4338ca;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="form-container">
+        <h1 class="text-2xl font-bold mb-6">Fill Form</h1>
+        
+        <!-- User Selection (Admin Only) -->
+        {% if user.role == 'admin' %}
+        <div class="form-group">
+            <label class="form-label">Select User</label>
+            <select id="userSelect" class="form-input" onchange="loadUserResumes()">
+                <option value="">Select a user</option>
+            </select>
+        </div>
+        {% endif %}
+
+        <!-- Resume Selection -->
+        <div class="form-group">
+            <label class="form-label">Select Resume</label>
+            <select id="resumeSelect" class="form-input" onchange="fillFormFromResume()">
+                <option value="">Select a resume</option>
+            </select>
+        </div>
+
+        <!-- Form Fields -->
+        <form id="dataForm" class="space-y-4">
+            {% csrf_token %}
+            <div class="form-group">
+                <label class="form-label">Full Name</label>
+                <input type="text" id="name" name="name" class="form-input" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Email</label>
+                <input type="email" id="email" name="email" class="form-input" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Phone</label>
+                <input type="tel" id="phone" name="phone" class="form-input" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Skills</label>
+                <input type="text" id="skills" name="skills" class="form-input" placeholder="Enter skills separated by commas">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Experience</label>
+                <textarea id="experience" name="experience" class="form-input" rows="4"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Education</label>
+                <textarea id="education" name="education" class="form-input" rows="4"></textarea>
+            </div>
+
+            <div class="flex justify-end">
+                <button type="submit" class="btn-primary">
+                    <i class="fas fa-save mr-2"></i>Save Form
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Function to get CSRF token
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.startsWith(name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.slice(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        // Load users for admin
+        {% if user.role == 'admin' %}
+        function loadUsers() {
+            fetch('/get_users/')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status) {
+                        const userSelect = document.getElementById('userSelect');
+                        data.users.forEach(user => {
+                            const option = document.createElement('option');
+                            option.value = user.id;
+                            option.textContent = user.username;
+                            userSelect.appendChild(option);
+                        });
+                    }
+                })
+                .catch(error => console.error('Error loading users:', error));
+        }
+        {% endif %}
+
+        // Load resumes based on user selection
+        function loadUserResumes() {
+            const resumeSelect = document.getElementById('resumeSelect');
+            resumeSelect.innerHTML = '<option value="">Select a resume</option>';
+
+            {% if user.role == 'admin' %}
+            const userId = document.getElementById('userSelect').value;
+            if (!userId) return;
+            {% endif %}
+
+            const url = {% if user.role == 'admin' %}
+                `/get_user_selected_resumes/${userId}/`
+            {% else %}
+                '/get_selected_resumes/'
+            {% endif %};
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status) {
+                        data.resumes.forEach(resume => {
+                            const option = document.createElement('option');
+                            option.value = resume.id;
+                            option.textContent = resume.name;
+                            resumeSelect.appendChild(option);
+                        });
+                    }
+                })
+                .catch(error => console.error('Error loading resumes:', error));
+        }
+
+        // Fill form with selected resume data
+        function fillFormFromResume() {
+            const resumeId = document.getElementById('resumeSelect').value;
+            if (!resumeId) return;
+
+            fetch(`/get_selected_resume_data/${resumeId}/`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status) {
+                        const parsedData = data.resume.resume__parsed_data;
+                        
+                        // Fill form fields
+                        document.getElementById('name').value = parsedData.name || '';
+                        document.getElementById('email').value = parsedData.email || '';
+                        document.getElementById('phone').value = parsedData.phone || '';
+                        document.getElementById('skills').value = parsedData.skills ? parsedData.skills.join(', ') : '';
+                        document.getElementById('experience').value = parsedData.experience || '';
+                        document.getElementById('education').value = parsedData.education || '';
+                    }
+                })
+                .catch(error => console.error('Error loading resume data:', error));
+        }
+
+        // Handle form submission
+        document.getElementById('dataForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                skills: document.getElementById('skills').value.split(',').map(s => s.trim()),
+                experience: document.getElementById('experience').value,
+                education: document.getElementById('education').value
+            };
+
+            fetch('/save_form_data/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status) {
+                    alert('Form data saved successfully!');
+                } else {
+                    alert('Error saving form data: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error saving form data');
+            });
+        });
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            {% if user.role == 'admin' %}
+            loadUsers();
+            {% else %}
+            loadUserResumes();
+            {% endif %}
+        });
+    </script>
+</body>
+</html> 
