@@ -130,8 +130,7 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 # SendGrid Configuration
-SENDGRID_API_KEY = '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'
-SENDGRID_SENDER_EMAIL = 'purvisharma.ps45@gmail.com'  # Replace with your verified sender email
+
 
 # Login URL Configuration
 LOGIN_URL = '/login/'
